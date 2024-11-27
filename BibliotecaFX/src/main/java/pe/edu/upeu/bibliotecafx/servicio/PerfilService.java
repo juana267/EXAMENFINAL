@@ -3,9 +3,7 @@ package pe.edu.upeu.bibliotecafx.servicio;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pe.edu.upeu.bibliotecafx.dto.ComboBoxOption;
-import pe.edu.upeu.bibliotecafx.modelo.CompCarrito;
 import pe.edu.upeu.bibliotecafx.modelo.Perfil;
-import pe.edu.upeu.bibliotecafx.repositorio.CompCarritoRepository;
 import pe.edu.upeu.bibliotecafx.repositorio.PerfilRepository;
 
 import java.util.List;

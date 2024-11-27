@@ -7,12 +7,17 @@ import org.springframework.stereotype.Service;
 import pe.edu.upeu.bibliotecafx.dto.ModeloDataAutocomplet;
 import pe.edu.upeu.bibliotecafx.modelo.ClienteLibro;
 import pe.edu.upeu.bibliotecafx.repositorio.ClienteLibroRepository;
+import java.util.Optional;
+
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class ClienteLibroService {
+
+    private String dni;
+
     @Autowired
     private ClienteLibroRepository repo;
     private Logger logger = LoggerFactory.getLogger(ClienteLibroService.class);
@@ -64,42 +69,36 @@ public class ClienteLibroService {
         return false;
     }
 
-    // Buscar cliente por ID
-    public ClienteLibro searchById(Long id) {
-        try {
-            return repo.findById(id).orElse(null);
-        } catch (Exception e) {
-            logger.error("Error al buscar cliente por ID", e);
+
+
+    public ClienteLibro searchById(String dni) {
+        // Buscar la lista de clientes con el mismo DNI
+        List<ClienteLibro> clientes = repo.findByDni(dni);
+
+        // Si la lista está vacía, lanzar una excepción
+        if (clientes.isEmpty()) {
+            throw new RuntimeException("Cliente no encontrado con DNI: " + dni);
         }
-        return null;
+
+        // Si la lista contiene elementos, devolver el primer cliente encontrado
+        return clientes.get(0);
     }
 
-    // Autocompletado para DNI y RUC
-    public List<ModeloDataAutocomplet> listAutoCompletClienteLibro(String query) {
-        List<ModeloDataAutocomplet> listarClienteLibro = new ArrayList<>();
+
+    public List<ModeloDataAutocomplet> listAutoCompletClienteDni() {
+        List<ModeloDataAutocomplet> listarclientes = new ArrayList<>();
         try {
-            if (query.length() == 8) {  // Caso para buscar por DNI
-                List<ClienteLibro> clientes = repo.findByDni(query);
-                for (ClienteLibro cliente : clientes) {
-                    ModeloDataAutocomplet data = new ModeloDataAutocomplet();
-                    data.setIdx(String.valueOf(cliente.getIdCliente()));
-                    data.setNameDysplay(cliente.getDni());
-                    data.setOtherData(cliente.getNombres()+":"+cliente.getRepLegal());
-                    listarClienteLibro.add(data);
-                }
-            } else if (query.length() == 11) {  // Caso para buscar por RUC
-                List<ClienteLibro> clientes = repo.findByRuc(query);
-                for (ClienteLibro cliente : clientes) {
-                    ModeloDataAutocomplet data = new ModeloDataAutocomplet();
-                    data.setIdx(String.valueOf(cliente.getIdCliente()));
-                    data.setNameDysplay(cliente.getRuc());
-                    data.setOtherData(cliente.getNombres()+":"+cliente.getRepLegal());
-                    listarClienteLibro.add(data);
-                }
+            for (ClienteLibro cliente : repo.findAll()) {
+                ModeloDataAutocomplet data = new ModeloDataAutocomplet();
+                data.setIdx(String.valueOf(cliente.getDni()));
+                data.setNameDysplay(cliente.getNombres());
+                data.setOtherData(cliente.getRepLegal());
+                listarclientes.add(data);
             }
         } catch (Exception e) {
-            logger.error("Error al realizar la busqueda", e);
+            logger.error("Error durante la operación", e);
         }
-        return listarClienteLibro;
+        return listarclientes;
     }
+
 }

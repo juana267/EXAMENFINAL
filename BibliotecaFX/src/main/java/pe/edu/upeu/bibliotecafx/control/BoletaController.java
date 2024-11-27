@@ -1,6 +1,5 @@
 package pe.edu.upeu.bibliotecafx.control;
 
-
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -12,48 +11,48 @@ import org.springframework.stereotype.Component;
 import pe.edu.upeu.bibliotecafx.componente.*;
 import pe.edu.upeu.bibliotecafx.dto.ModeloDataAutocomplet;
 import pe.edu.upeu.bibliotecafx.dto.SessionManager;
-import pe.edu.upeu.bibliotecafx.modelo.VentCarrito;
+import pe.edu.upeu.bibliotecafx.modelo.VentCarritoBoleta;
 import pe.edu.upeu.bibliotecafx.modelo.VentaBoleta;
-import pe.edu.upeu.bibliotecafx.modelo.VentaDetalleBoleta;
+import pe.edu.upeu.bibliotecafx.modelo.VentaBoletaDetalle;
 import pe.edu.upeu.bibliotecafx.servicio.*;
 
-import java.time.LocalDateTime;
+        import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
-import java.util.function.Consumer;
+        import java.util.function.Consumer;
 
 @Component
 public class BoletaController {
     @FXML
-    TextField autocompProducto;
+    TextField autocompLibro;
     @FXML
-    TextField nombreProducto, codigoPro, stockPro, cantidadPro, punitPro, preTPro, txtBaseImp, txtIgv, txtDescuento, txtImporteT;
+    TextField nombreLibro, codigoLibro, stockLibro, cantidadLibro, precio, preTLibro, txtBaseImp, txtIgv, txtDescuento, txtImporteT;
     @FXML
-    Button btnRegVenta, btnRegCarrito, btnFormCliente;
+    Button btnRegVenta, btnRegCarrito, btnFormClienteLibro;
     @FXML
-    TextField autocompCliente;
+    TextField autocompClienteLibro;
     @FXML
     TextField razonSocial;
     @FXML
-    TextField dniRuc;
+    TextField dni;
     @FXML
-    TableView<VentCarrito> tableView;
+    TableView<VentCarritoBoleta> tableView;
     AutoCompleteTextField actf;
-    ModeloDataAutocomplet lastProducto;
+    ModeloDataAutocomplet lastLibro;
     AutoCompleteTextField actfC;
-    ModeloDataAutocomplet lastCliente;
+    ModeloDataAutocomplet lastClienteLibro;
     @Autowired
     LibroService libroService;
     @Autowired
-    ClienteLibroService clienteLibroService;
+    ClienteLibroService cs;
     @Autowired
-    VentCarritoService daoC;
+    VentCarritoBoletaService ventCarritoBoletaService;
     @Autowired
     UsuarioService daoU;
     @Autowired
-    VentaBoletaService ventaBoletaService;
+    VentaBoletaService daoV;
     @Autowired
-    VentaDetalleService daoVD;
+    VentaBoletaDetalleService daoVD;
     Stage stage;
     @FXML
     private AnchorPane miContenedor;
@@ -61,76 +60,80 @@ public class BoletaController {
     private final SortedSet<ModeloDataAutocomplet> entries = new TreeSet<>((ModeloDataAutocomplet o1, ModeloDataAutocomplet o2) -> o1.toString().compareTo(o2.toString()));
     private final SortedSet<ModeloDataAutocomplet> entriesC = new TreeSet<>((ModeloDataAutocomplet o1, ModeloDataAutocomplet o2) -> o1.toString().compareTo(o2.toString()));
 
-
     @FXML
-    public void initialize(){
+    public void initialize() {
 
         Platform.runLater(() -> {
             stage = (Stage) miContenedor.getScene().getWindow();
             System.out.println("El título del stage es: " + stage.getTitle());
         });
 
-        listarCliente();
-        actfC=new AutoCompleteTextField<>(entriesC, autocompCliente);
-        autocompCliente.setOnKeyReleased(e->{
-            lastCliente=(ModeloDataAutocomplet) actfC.getLastSelectedObject();
-            if(lastCliente!=null){
-                System.out.println(lastCliente.getNameDysplay());
-                razonSocial.setText(lastCliente.getNameDysplay());
-                dniRuc.setText(lastCliente.getIdx());
+        listarClienteLibro(); // Pasa un filtro vacío
+        actfC = new AutoCompleteTextField<>(entriesC, autocompClienteLibro);
+        autocompClienteLibro.setOnKeyReleased(e -> {
+            lastClienteLibro = (ModeloDataAutocomplet) actfC.getLastSelectedObject();
+            if (lastClienteLibro != null) {
+                System.out.println(lastClienteLibro.getNameDysplay());
+                razonSocial.setText(lastClienteLibro.getNameDysplay());
+                dni.setText(lastClienteLibro.getIdx());
                 listar();
             }
         });
 
-        listarProducto();
-        actf=new AutoCompleteTextField<>(entries, autocompProducto);
-        autocompProducto.setOnKeyReleased(e->{
-            lastProducto=(ModeloDataAutocomplet) actf.getLastSelectedObject();
-            if(lastProducto!=null){
-                System.out.println(lastProducto.getNameDysplay());
-                nombreProducto.setText(lastProducto.getNameDysplay());
-                codigoPro.setText(lastProducto.getIdx());
-                String[] dato=lastProducto.getOtherData().split(":");
-                punitPro.setText(dato[0]);
-                stockPro.setText(dato[1]);
+        listarLibro();
+        actf = new AutoCompleteTextField<>(entries, autocompLibro);
+        autocompLibro.setOnKeyReleased(e -> {
+            lastLibro = (ModeloDataAutocomplet) actf.getLastSelectedObject();
+            if (lastLibro != null) {
+                System.out.println(lastLibro.getNameDysplay());
+                nombreLibro.setText(lastLibro.getNameDysplay());
+                codigoLibro.setText(lastLibro.getIdx());
+                String[] dato = lastLibro.getOtherData().split(":");
+                precio.setText(dato[0]);
+                stockLibro.setText(dato[1]);
             }
         });
-
 
         personalizarTabla();
         btnRegCarrito.setDisable(true);
     }
-    public void listarProducto(){
-        entries.addAll(ps.listAutoCompletProducto());
-    }
-    public void listarCliente(){
-        entriesC.addAll(cs.listAutoCompletCliente());
+
+    public void listarLibro() {
+        entries.addAll(libroService.listAutoCompletLibro());
     }
 
-    public void personalizarTabla(){
+    public void listarClienteLibro() {
+        entriesC.addAll(cs.listAutoCompletClienteDni());
+    }
+
+    public void personalizarTabla() {
         // Crear instancia de la clase genérica TableViewHelper
-        TableViewHelper<VentCarrito> tableViewHelper = new TableViewHelper<>();
+        TableViewHelper<VentCarritoBoleta> tableViewHelper = new TableViewHelper<>();
         // Definir las columnas dinámicamente en un mapa (nombre visible -> campo del modelo)
         LinkedHashMap<String, ColumnInfo> columns = new LinkedHashMap<>();
-        columns.put("ID Prod", new ColumnInfo("producto.idProducto", 100.0)); // Columna visible "Columna 1" mapea al campo "campo1"
-        columns.put("Nombre Producto", new ColumnInfo("nombreProducto", 300.0)); // Columna visible "Columna 1" mapea al campo "campo1"
+        columns.put("ID Libro", new ColumnInfo("libro.idLibro", 100.0)); // Columna visible "Columna 1" mapea al campo "campo1"
+        columns.put("Título", new ColumnInfo("nombreLibro", 300.0)); // Columna visible "Columna 1" mapea al campo "campo1"
         columns.put("Cantidad", new ColumnInfo("cantidad", 60.0)); // Columna visible "Columna 2" mapea al campo "campo2"
         columns.put("P.Unitario", new ColumnInfo("punitario", 100.0)); // Columna visible "Columna 2" mapea al campo "campo2"
         columns.put("P.Total", new ColumnInfo("ptotal", 100.0)); // Columna visible "Columna 2" mapea al campo "campo2"
         // Definir las acciones de actualizar y eliminar
-        Consumer<VentCarrito> updateAction = (VentCarrito ventCarrito) -> { System.out.println("Actualizar: " + ventCarrito); };
-        Consumer<VentCarrito> deleteAction = (VentCarrito ventCarrito) -> {deleteReg(ventCarrito); };
+        Consumer<VentCarritoBoleta> updateAction = (VentCarritoBoleta VentCarritoBoleta) -> {
+            System.out.println("Actualizar: " + VentCarritoBoleta);
+        };
+        Consumer<VentCarritoBoleta> deleteAction = (VentCarritoBoleta VentCarritoBoleta) -> {
+            deleteReg(VentCarritoBoleta);
+        };
         // Usar el helper para agregar las columnas en el orden correcto
-        tableViewHelper.addColumnsInOrderWithSize(tableView, columns,updateAction, deleteAction );
+        tableViewHelper.addColumnsInOrderWithSize(tableView, columns, updateAction, deleteAction);
         // Agregar botones de eliminar y modificar
         tableView.setTableMenuButtonVisible(true);
     }
 
-    public void listar(){
+    public void listar() {
         tableView.getItems().clear();
-        List<VentCarrito> lista=daoC.listaCarritoCliente(dniRuc.getText());
+        List<VentCarritoBoleta> lista = ventCarritoBoletaService. listaCarritoCliente(dni.getText());
         double impoTotal = 0, igv = 0;
-        for (VentCarrito dato: lista){
+        for (VentCarritoBoleta dato : lista) {
             impoTotal += Double.parseDouble(String.valueOf(dato.getPtotal()));
         }
         txtImporteT.setText(String.valueOf(impoTotal));
@@ -139,61 +142,69 @@ public class BoletaController {
         txtIgv.setText(String.valueOf(Math.round((pv * 0.18) * 100.0) / 100.0));
         tableView.getItems().addAll(lista);
     }
-    public void editVenCarrito(VentCarrito obj) {
-        System.out.println(obj.getDniruc());
+
+    public void editVenCarrito(VentCarritoBoleta obj) {
+        System.out.println(obj.getDni());
     }
-    public void deleteReg(VentCarrito obj) {
+
+    public void deleteReg(VentCarritoBoleta obj) {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Confirmación");
         alert.setHeaderText("Confirmar acción");
         alert.setContentText("¿Estás seguro de que deseas eliminar este elemento?");
-        // Mostrar el diálogo y esperar la respuesta del usuario
         Optional<ButtonType> result = alert.showAndWait();
-        // Verificar si el usuario hizo clic en "Aceptar"
         if (result.isPresent() && result.get() == ButtonType.OK) {
-            daoC.delete(obj.getIdCarrito());
+            ventCarritoBoletaService.delete(obj.getIdCarrito());
             Stage stage = StageManager.getPrimaryStage();
-            double with=stage.getMaxWidth()/2;
+            double with = stage.getMaxWidth() / 2;
             Toast.showToast(stage, "¡Acción completada!", 2000, with, 50);
             listar();
         } else {
-            // Si el usuario cancela, no se hace nada
             System.out.println("Acción cancelada");
         }
     }
 
     @FXML
-    private void calcularPT(){
-        if(!cantidadPro.getText().equals("")){
-            double dato=Double.parseDouble(punitPro.getText())*Double.parseDouble(cantidadPro.getText());
-            preTPro.setText(String.valueOf(dato));
-            if(Double.parseDouble(cantidadPro.getText())>0.0){
+    private void calcularPT() {
+        if (!cantidadLibro.getText().equals("")) {
+            double punit = Double.parseDouble(precio.getText());
+            double cantidad = Double.parseDouble(cantidadLibro.getText());
+            double dato = punit * cantidad;
+
+
+            // Imprime los valores para depuración
+            System.out.println("Precio Unitario: " + punit);
+            System.out.println("Cantidad: " + cantidad);
+            System.out.println("Precio Total Calculado: " + dato);
+
+            preTLibro.setText(String.valueOf(dato));  // Asignar el valor calculado a preTLibro
+            if (cantidad > 0.0) {
                 btnRegCarrito.setDisable(false);
-            }else{
+            } else {
                 btnRegCarrito.setDisable(true);
             }
-        }else{
+        } else {
             btnRegCarrito.setDisable(true);
         }
     }
 
 
     @FXML
-    private void registarPCarrito(){
+    private void registarPCarrito() {
         try {
-            VentCarrito ss= VentCarrito.builder()
-                    .dniruc(dniRuc.getText())
-                    .producto(ps.searchById(Long.parseLong(codigoPro.getText())))
-                    .nombreProducto(nombreProducto.getText())
-                    .cantidad(Double.parseDouble(cantidadPro.getText()))
-                    .punitario(Double.parseDouble(punitPro.getText()))
-                    .ptotal(Double.parseDouble(preTPro.getText()))
+            VentCarritoBoleta ss = VentCarritoBoleta.builder()
+                    .dni(dni.getText())
+                    .libro(libroService.searchById(Long.parseLong(codigoLibro.getText())))
+                    .nombreLibro(nombreLibro.getText())
+                    .cantidad(Double.parseDouble(cantidadLibro.getText()))
+                    .punitario(Double.parseDouble(precio.getText()))
+                    .ptotal(Double.parseDouble(preTLibro.getText()))
                     .estado(1)
                     .usuario(daoU.searchById(SessionManager.getInstance().getUserId()))
                     .build();
-            daoC.save(ss);
+            ventCarritoBoletaService.save(ss);
             listar();
-        }catch (Exception e){
+        } catch (Exception e) {
             System.out.println(e.getMessage());
         }
     }
@@ -204,24 +215,25 @@ public class BoletaController {
         LocalDateTime localDate = LocalDateTime.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss", locale);
         String fechaFormateada = localDate.format(formatter);
-        Venta to=Venta.builder()
-                .cliente(cs.searchById(dniRuc.getText()))
-                .precioBase(Double.parseDouble(txtBaseImp.getText()))
-                .igv(Double.parseDouble(txtIgv.getText()))
-                .precioTotal(Double.parseDouble(txtImporteT.getText()))
-                .usuario(daoU.searchById(SessionManager.getInstance().getUserId()))
-                .serie("V")
-                .tipoDoc("Factura")
-                .fechaGener(localDate.parse(fechaFormateada, formatter))
-                .numDoc("00" )
+        VentaBoleta.VentaBoletaBuilder builder = VentaBoleta.builder();
+        builder.clienteLibro(cs.searchById(dni.getText()));
+        builder.precioBase(Double.parseDouble(txtBaseImp.getText()));
+        builder.igv(Double.parseDouble(txtIgv.getText()));
+        builder.precioTotal(Double.parseDouble(txtImporteT.getText()));
+        builder.usuario(daoU.searchById(SessionManager.getInstance().getUserId()));
+        builder.serie("V");
+        builder.tipoDoc("Boleta");
+        builder.fechaGener(localDate.parse(fechaFormateada, formatter));
+        builder.numDoc("00");
+        VentaBoleta to= builder
                 .build();
-        Venta idX = daoV.save(to);
-        List<VentCarrito> dd = daoC.listaCarritoCliente(dniRuc.getText());
+        VentaBoleta idX = daoV.save(to);
+        List<VentCarritoBoleta> dd = ventCarritoBoletaService.listaCarritoCliente(dni.getText());
         if (idX.getIdVenta() != 0) {
-            for (VentCarrito car : dd) {
-                VentaDetalle vd = VentaDetalle.builder()
+            for (VentCarritoBoleta car : dd) {
+                VentaBoletaDetalle vd = VentaBoletaDetalle.builder()
                         .venta(idX)
-                        .producto(ps.searchById(car.producto.getIdProducto()))
+                        .libro(libroService.searchById(car.libro.getIdLibro()))
                         .cantidad(car.getCantidad())
                         .descuento(0.0)
                         .pu(car.getPunitario())
@@ -230,7 +242,7 @@ public class BoletaController {
                 daoVD.save(vd);
             }
         }
-        daoC.deleteCarAll(dniRuc.getText());
+        ventCarritoBoletaService.deleteCarAll(dni.getText());
         listar();
         try {
             jasperPrint= daoV.runReport(Long.parseLong(String.valueOf(idX.getIdVenta())));
@@ -244,6 +256,5 @@ public class BoletaController {
             System.out.println(e.getMessage());
         }
     }
-
 
 }

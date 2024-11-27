@@ -15,15 +15,11 @@ public class MenuMenuItemDao implements MenuMenuItenDaoI{
         List<MenuMenuItenTO> lista = new ArrayList<>();
         lista.add(new MenuMenuItenTO(idioma.getProperty("menu.nombre.archivo"), "", "mifile"));
         lista.add(new MenuMenuItenTO(idioma.getProperty("menu.nombre.archivo"), "Salir", "misalir"));
-        lista.add(new MenuMenuItenTO("Edit", "Cortar", "micut"));
-        lista.add(new MenuMenuItenTO("Edit", "copiar", "micopy"));
-        lista.add(new MenuMenuItenTO("Edit", "pegar", "mipaste"));
-        lista.add(new MenuMenuItenTO("Edit", idioma.getProperty("menuitem.nombre.postulante"), "miselectall"));
+
         lista.add(new MenuMenuItenTO("Clientes", "Reg. Clientes", "micliente"));
 
         lista.add(new MenuMenuItenTO("Libro", "Reg. Libro", "mireglibro"));
-        lista.add(new MenuMenuItenTO("Producto", "Ver2", "miver2"));
-        lista.add(new MenuMenuItenTO("Producto", "Auto Complete", "miautcomp"));
+
 
         lista.add(new MenuMenuItenTO("Venta", "Reg. Boleta", "miventaboleta"));
         lista.add(new MenuMenuItenTO("Venta", "Reg. Factura", "miventafactura"));
@@ -32,9 +28,7 @@ public class MenuMenuItemDao implements MenuMenuItenDaoI{
 
 
 
-        lista.add(new MenuMenuItenTO("Principal", "Cliente", "cliente"));
-        lista.add(new MenuMenuItenTO("Principal", "Rep. Venta", "repventa"));
-        lista.add(new MenuMenuItenTO("Principal", "Reg. Venta", "regventa"));
+
         List<MenuMenuItenTO> accesoReal = new ArrayList<>();
         switch (perfil) {
             case "Administrador":
@@ -43,8 +37,6 @@ public class MenuMenuItemDao implements MenuMenuItenDaoI{
                 accesoReal.add(lista.get(2));
                 accesoReal.add(lista.get(3));
                 accesoReal.add(lista.get(4));
-                accesoReal.add(lista.get(5));
-                accesoReal.add(lista.get(6));
                 break;
             case "Root":
                 accesoReal = lista;

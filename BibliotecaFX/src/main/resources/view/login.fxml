@@ -62,7 +62,7 @@
                         <Font name="System Bold" size="14.0" />
                      </font>
                   </Button>
-                  <Button fx:id="btnClean" mnemonicParsing="false" onAction="#login" prefHeight="35.0" prefWidth="100.0" style="-fx-background-color: #2a8a85; -fx-border-radius: 5px; -fx-background-radius: 5px;" text="Limpiar" textFill="WHITE">
+                  <Button fx:id="btnLimpiar" mnemonicParsing="false" onAction="#actionEvent" prefHeight="35.0" prefWidth="100.0" style="-fx-background-color: #2a8a85; -fx-border-radius: 5px; -fx-background-radius: 5px;" text="Limpiar" textFill="WHITE">
                      <font>
                         <Font name="System Bold" size="14.0" />
                      </font>

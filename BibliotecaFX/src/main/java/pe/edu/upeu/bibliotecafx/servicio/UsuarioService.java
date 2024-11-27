@@ -28,7 +28,7 @@ public class UsuarioService {
         try {
             Usuario toe = repo.findById(id).orElse(null);
             if (toe != null) {
-                toe.setClave(to.getClave());
+                toe.setIdPerfil(to.getIdPerfil());
                 return repo.save(toe);
             }
         } catch (Exception e) {
@@ -36,6 +36,7 @@ public class UsuarioService {
         }
         return null;
     }
+
 
     public void delete(Long id) {
         repo.deleteById(id);
@@ -61,6 +62,8 @@ public class UsuarioService {
             return null; // El usuario no existe
         }
     }
+
+
             // Método para verificar si un correo es único
         public boolean isCorreoUnico(String correo) {
             return repo.findByCorreo(correo).isEmpty();

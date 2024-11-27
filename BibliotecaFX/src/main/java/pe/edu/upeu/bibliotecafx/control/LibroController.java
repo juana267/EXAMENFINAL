@@ -24,6 +24,9 @@ import pe.edu.upeu.bibliotecafx.dto.ComboBoxOption;
 import pe.edu.upeu.bibliotecafx.modelo.Libro;
 import pe.edu.upeu.bibliotecafx.servicio.*;
 
+import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -137,6 +140,7 @@ public class LibroController {
         columns.put("Categoría", new ColumnInfo("categoria.nombre", 200.0)); // Columna Categoría (mapeada al nombre)
         columns.put("Editorial", new ColumnInfo("editorial.nombre", 200.0)); // Columna Editorial (mapeada al nombre)
         columns.put("Idioma", new ColumnInfo("idioma.nombre", 150.0)); // Columna Idioma (mapeada al nombre)
+        columns.put("Precio", new ColumnInfo("precio", 150.0)); // Columna Idioma (mapeada al nombre)
         columns.put("Estado", new ColumnInfo("estadoLibro.nombre", 150.0)); // Columna Estado del Libro (mapeada al nombre)
 
 
@@ -410,6 +414,8 @@ public class LibroController {
         // Limpiar posibles errores previos en el formulario
         limpiarErrores();
     }
+
+
 
 
 }

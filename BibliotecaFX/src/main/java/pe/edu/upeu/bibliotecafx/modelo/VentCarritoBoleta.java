@@ -11,25 +11,33 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 @Entity
-@Table(name = "upeu_vent_carrito")
-public class VentCarrito {
+@Table(name = "upeu_vent_carrito_boleta")
+public class VentCarritoBoleta {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_carrito")
     public Long idCarrito;
-    @Column(name = "dniruc", nullable = false, length = 12)
-    public String dniruc;
+
+    @Column(name = "dni", nullable = false, length = 12)
+    public String dni;
+
     @ManyToOne
     @JoinColumn(name = "id_libro", nullable = false)
     public Libro libro;
-    @Column(name = "nombre_producto", nullable = false, length = 120)
-    public String nombreProducto;
+
+    @Column(name = "nombre_libro", nullable = false, length = 120)
+    public String nombreLibro;
+
     @Column(name = "cantidad", nullable = false)
     public Double cantidad;
+
     @Column(name = "punitario", nullable = false)
     public Double punitario;
+
     @Column(name = "ptotal", nullable = false)
     public Double ptotal;
+
     @Column(name = "estado", nullable = false)
     public int estado;
 

@@ -5,7 +5,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<GridPane prefHeight="450.0" prefWidth="800.0" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pe.edu.upeu.bibliotecafx.control.MainViewController">
+<GridPane prefHeight="450.0" prefWidth="800.0" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pe.edu.upeu.bibliotecafx.control.MainViewController">
     <columnConstraints>
         <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" percentWidth="40.0" />
         <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" percentWidth="60.0" prefWidth="100.0" />
@@ -16,21 +16,13 @@
     <children>
         <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" style="-fx-background-color: #30373e;" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
             <children>
-                <Label text="Bienvenido a HiZTech Soft" textAlignment="CENTER" textFill="WHITE" wrapText="true">
+                <Label prefHeight="135.0" prefWidth="363.0" text="Bienvenido Laberinto de Ideas " textAlignment="CENTER" textFill="WHITE" wrapText="true">
                     <font>
                         <Font name="System Bold" size="30.0" />
                     </font>
                     <VBox.margin>
                         <Insets left="40.0" right="40.0" />
                     </VBox.margin>
-                </Label>
-                <Label text="¿Estás Registrado en Nuestro Software?" textAlignment="CENTER" textFill="WHITE" wrapText="true">
-                    <VBox.margin>
-                        <Insets top="10.0" />
-                    </VBox.margin>
-                    <font>
-                        <Font size="20.0" />
-                    </font>
                 </Label>
                 <HBox alignment="CENTER">
                     <VBox.margin>

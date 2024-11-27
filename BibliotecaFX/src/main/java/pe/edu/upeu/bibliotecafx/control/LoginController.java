@@ -8,6 +8,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
@@ -23,6 +24,7 @@ import pe.edu.upeu.bibliotecafx.dto.SessionManager;
 import pe.edu.upeu.bibliotecafx.modelo.Usuario;
 import pe.edu.upeu.bibliotecafx.servicio.UsuarioService;
 
+import java.awt.event.MouseEvent;
 import java.io.IOException;
 
 @Component
@@ -33,6 +35,9 @@ public class LoginController {
 
     @Autowired
     private ApplicationContext context;
+
+    @FXML
+    private CheckBox checkViewPassSignIn;
 
     @FXML
     private TextField txtUsuario;
@@ -87,7 +92,39 @@ public class LoginController {
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             double with = stage.getWidth() * 2;
             double h = stage.getHeight() / 2;
-            Toast.showToast(stage, "Ocurrió un error. Intente nuevamente", 2000, with, h);
+            Toast.showToast(stage, "Espere confirmacion del ADMIN ", 2000, with, h);
         }
     }
+
+    @FXML
+    public void actionEvent() {
+        limpiarFormulario(); // Acciona la limpieza del formulario
+    }
+
+    @FXML
+    public void limpiarFormulario() {
+        txtUsuario.setText("");
+        txtClave.setText("");
+        limpiarErrores(); // Limpia errores visuales
+        mostrarMensaje("", true); // Limpia cualquier mensaje en pantalla
+    }
+    private void limpiarErrores() {
+        txtUsuario.getStyleClass().remove("text-field-error");
+        txtClave.getStyleClass().remove("text-field-error");
+    }
+    private void mostrarMensaje(String mensaje, boolean exito) {
+    }
+
+    @FXML
+    void togglePasswordVisibility(MouseEvent event) {
+        if (checkViewPassSignIn.isSelected()) {
+            // Mostrar la contraseña (opcional: usar un TextField en lugar de PasswordField)
+            System.out.println("Contraseña visible: " + txtClave.getText());
+        } else {
+            // Ocultar la contraseña
+            System.out.println("Contraseña oculta.");
+        }
+    }
+
+
 }

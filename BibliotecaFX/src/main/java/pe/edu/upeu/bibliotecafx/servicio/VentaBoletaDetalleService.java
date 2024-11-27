@@ -2,27 +2,27 @@ package pe.edu.upeu.bibliotecafx.servicio;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import pe.edu.upeu.bibliotecafx.modelo.CompCarrito;
-import pe.edu.upeu.bibliotecafx.repositorio.CompCarritoRepository;
+import pe.edu.upeu.bibliotecafx.modelo.VentaBoletaDetalle;
+import pe.edu.upeu.bibliotecafx.repositorio.VentaDetalleBoletaRepository;
 
 import java.util.List;
 
 @Service
-public class CompCarritoService {
+public class VentaBoletaDetalleService {
     @Autowired
-    CompCarritoRepository repo;
+    VentaDetalleBoletaRepository repo;
 
-    public CompCarrito save(CompCarrito to) {
+    public VentaBoletaDetalle save(VentaBoletaDetalle to) {
         return repo.save(to);
     }
 
-    public List<CompCarrito> list() {
+    public List<VentaBoletaDetalle> list() {
         return repo.findAll();
     }
 
-    public CompCarrito update(CompCarrito to, Long id) {
+    public VentaBoletaDetalle update(VentaBoletaDetalle to, Long id) {
         try {
-            CompCarrito toe = repo.findById(id).orElse(null);
+            VentaBoletaDetalle toe = repo.findById(id).orElse(null);
             if (toe != null) {
                 toe.setCantidad(to.getCantidad());
                 return repo.save(toe);
@@ -37,7 +37,7 @@ public class CompCarritoService {
         repo.deleteById(id);
     }
 
-    public CompCarrito searchById(Long id) {
+    public VentaBoletaDetalle searchById(Long id) {
         return repo.findById(id).orElse(null);
     }
 }

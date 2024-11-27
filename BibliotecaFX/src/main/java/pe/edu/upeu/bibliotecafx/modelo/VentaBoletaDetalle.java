@@ -12,7 +12,8 @@ import lombok.NoArgsConstructor;
 @Data
 @Entity
 @Table(name = "upeu_venta_detalle")
-public class VentaDetalleBoleta {
+public class VentaBoletaDetalle {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_venta_detalle")
@@ -25,16 +26,17 @@ public class VentaDetalleBoleta {
     private Double descuento;
     @Column(name = "subtotal", nullable = false)
     private Double subtotal;
+
     @ManyToOne
-    @JoinColumn(name = "id_venta", referencedColumnName =
-            "id_venta",
-            nullable = false, foreignKey = @ForeignKey(name =
-            "FK_VENTA_VENTADETALLE"))
-    private VentaBoleta ventaBoleta;
+    @JoinColumn(name = "id_venta", referencedColumnName = "id_venta",
+            nullable = false, foreignKey = @ForeignKey(name = "FK_VENTA_VENTADETALLE"))
+    private VentaBoleta venta;  // Relación de muchos a uno
+
+
     @ManyToOne
-    @JoinColumn(name = "id_producto", referencedColumnName =
-            "id_producto",
+    @JoinColumn(name = "id_libro", referencedColumnName =
+            "id_libro",
             nullable = false, foreignKey = @ForeignKey(name =
-            "FK_PRODUCTO_VENTADETALLE"))
+            "FK_LIBRO_VENTADETALLE"))
     private Libro libro;
 }

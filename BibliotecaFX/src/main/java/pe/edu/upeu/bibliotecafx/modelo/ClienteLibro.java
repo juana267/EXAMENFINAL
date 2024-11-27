@@ -36,4 +36,44 @@ public class ClienteLibro {
     @Size(max = 160, message = "El representante legal no puede exceder los 160 caracteres")
     @Column(name = "rep_legal", length = 160)
     private String repLegal;
+
+    public Long getIdCliente() {
+        return idCliente;
+    }
+
+    public void setIdCliente(Long idCliente) {
+        this.idCliente = idCliente;
+    }
+
+    public String getDni() {
+        return dni;
+    }
+
+    public void setDni(String dni) {
+        this.dni = dni;
+    }
+
+    public String getRuc() {
+        return ruc;
+    }
+
+    public void setRuc(String ruc) {
+        this.ruc = ruc;
+    }
+
+    public String getNombres() {
+        return nombres;
+    }
+
+    public void setNombres(String nombres) {
+        this.nombres = nombres;
+    }
+
+    public String getRepLegal() {
+        return repLegal;
+    }
+
+    public void setRepLegal(String repLegal) {
+        this.repLegal = repLegal;
+    }
 }
